@@ -8,6 +8,8 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
+from tramper_estimator import TramperEstimator
+
 logger = logging.getLogger('TfPoseEstimator-WebCam')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -17,7 +19,6 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 fps_time = 0
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation realtime webcam')
@@ -52,6 +53,20 @@ if __name__ == '__main__':
         logger.debug(humans)
         logger.debug('postprocess+')
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+
+        is_indicating_stop = TramperEstimator.is_indicating_stop(humans)
+        logger.debug('IsIndicatingStop: ' + str(is_indicating_stop))
+
+        if is_indicating_stop:
+            cv2.putText(image,
+                    "Indicating stop",
+                    (10, 200),  cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (0, 255, 0), 2)
+        else:
+            cv2.putText(image,
+                    "Not indicating stop",
+                    (10, 200),  cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (0, 255, 0), 2)
 
         logger.debug('show+')
         cv2.putText(image,

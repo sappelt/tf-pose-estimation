@@ -398,6 +398,40 @@ class TfPoseEstimator:
             for pair_order, pair in enumerate(common.CocoPairsRender):
                 if pair[0] not in human.body_parts.keys() or pair[1] not in human.body_parts.keys():
                     continue
+                
+                if pair[0] == common.CocoPart.RElbow.value and pair[1] == common.CocoPart.RWrist.value:
+                    body_part1 = human.body_parts[pair[0]]
+                    body_part2 = human.body_parts[pair[1]]
+
+                    logger.info(pair)
+                    logger.info("CocoPair" + str(common.CocoPart(pair[0])) + " - " + str(common.CocoPart(pair[1])))
+                    logger.info("Points: " + str(body_part1) + " - " + str(body_part2))
+
+                    angle_radians = math.atan2(body_part1.y-body_part2.y, body_part1.x-body_part2.x)
+                    angle_degrees = math.degrees(angle_radians)
+                    logger.info("Angle: " + str(angle_degrees))
+
+                    cv2.putText(npimg, "Right Angle: " + str(angle_degrees),
+                    (50, 50),  cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (0, 255, 0), 2)
+
+                # Left arm
+                if pair[0] == common.CocoPart.LElbow.value and pair[1] == common.CocoPart.LWrist.value:
+                    body_part1 = human.body_parts[pair[0]]
+                    body_part2 = human.body_parts[pair[1]]
+
+                    logger.info(pair)
+                    logger.info("CocoPair" + str(common.CocoPart(pair[0])) + " - " + str(common.CocoPart(pair[1])))
+                    logger.info("Points: " + str(body_part1) + " - " + str(body_part2))
+
+                    angle_radians = math.atan2(body_part2.y-body_part1.y, body_part2.x-body_part1.x)
+                    angle_degrees = math.degrees(angle_radians)
+                    logger.info("Angle: " + str(angle_degrees))
+
+                    cv2.putText(npimg, "Left Angle: " + str(angle_degrees),
+                    (50, 150),  cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (0, 255, 0), 2)
+
 
                 # npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
                 cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
